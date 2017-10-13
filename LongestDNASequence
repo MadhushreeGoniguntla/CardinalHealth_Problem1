@@ -1,0 +1,62 @@
+
+var StringUtils = function() {
+}
+
+
+
+function GetLongestDnaParent(parent1,parent2,child){
+        
+      var parent1seq, parent2seq;
+      
+      parent1seq = GetLongestCommonSequence(parent1,child);
+      parent2seq = GetLongestCommonSequence(parent2,child);
+    
+    if(parent1seq.length > parent2seq.length)    
+        return "Primary donor: Parent1," + "\n" + "Intact sequence: " + parent1seq;
+    else if (parent1seq.length < parent2seq.length)    
+        return "Primary donor: Parent2" + "\n" + "Intact sequence: " + parent2seq;
+        
+      else return "No match";
+      
+    }
+
+function GetLongestCommonSequence(string1, string2) {
+    var comparsions = []; //2D array for the char comparsions ...
+    var maxSubStrLength = 0;
+    var lastMaxSubStrIndex = -1, i, j, char1, char2, startIndex;
+
+    for (i = 0; i < string1.length; ++i) {
+        comparsions[i] = new Array();
+
+        for (j = 0; j < string2.length; ++j) {
+            char1 = string1.charAt(i);
+            char2 = string2.charAt(j);
+
+            if (char1 === char2) {
+                if (i > 0 && j > 0) {
+                    comparsions[i][j] = comparsions[i - 1][j - 1] + 1;
+                } else {
+                    comparsions[i][j] = 1;
+                }
+            } else {
+                comparsions[i][j] = 0;
+            }
+
+            if (comparsions[i][j] > maxSubStrLength) {
+                maxSubStrLength = comparsions[i][j];
+                lastMaxSubStrIndex = i;
+            }
+        }
+    }
+
+    if (maxSubStrLength > 0) {
+        startIndex = lastMaxSubStrIndex - maxSubStrLength + 1;
+
+        return string1.substr(startIndex, maxSubStrLength);
+    }
+
+    return null;
+}
+
+console.log(GetLongestDnaParent("CABACABATG", "TTCBTGABCT","CBBTTCACTCABATGTTCTTCTTCB"));
+console.log(GetLongestDnaParent("CATABACT", "CABBBBBA","CABCATCABCATBBBBBTC"));
